@@ -17,12 +17,12 @@ return new class extends Migration
             $table->increments('id_depart');
             $table->integer('numero_depart');
 
-            $table->integer('destinateur_depart')->unsigned();
-            $table->foreign('destinateur_depart')
+            $table->integer('id_usager')->unsigned();
+            $table->foreign('id_usager')
                     ->references('id_usager')
                     ->on('usagers')->onDelete('cascade');
 
-            $table->integer('objet_depart');
+            $table->string('motif_depart', 100);
             $table->timestamps();
         });
     }

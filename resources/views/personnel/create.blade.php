@@ -4,7 +4,7 @@
     @if ($errors->any())
         <div class="alertDanger">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-            <strong>Success!</strong>
+            <strong>Error!</strong>
             @foreach ($errors->all() as $error)
                     <p>{{ $error }}</p>
             @endforeach
@@ -108,9 +108,9 @@
                                                 <i class="fa fa-user"></i>
                                             </span>
                                         </div>
-                                        <select name="user[role]" id="" class="form-control">
+                                        <select name="user[role]" class="form-control">
                                             <option value="Administrateur">Administrateur</option>
-                                            <option value="simple Utilisateur">imple Utilisateur</option>
+                                            <option value="simple Utilisateur">simple Utilisateur</option>
                                         </select>
                                     </div>
                                     <!-- /.input group -->

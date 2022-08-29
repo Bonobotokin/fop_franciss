@@ -17,13 +17,13 @@ return new class extends Migration
             $table->increments('id_arriver');
             $table->integer('numero_arriver');
 
-            $table->integer('expediteur_arriver')->unsigned();
-            $table->foreign('expediteur_arriver')
+            $table->integer('id_usager')->unsigned();
+            $table->foreign('id_usager')
                     ->references('id_usager')
                     ->on('usagers')->onDelete('cascade');
 
-            $table->integer('objet_arriver');
-            $table->integer('destinateur_arriver');
+            $table->string('objet_arriver');
+            $table->string('destinateur_arriver');
             $table->timestamps();
         });
     }

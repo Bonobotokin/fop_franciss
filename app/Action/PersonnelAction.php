@@ -1,17 +1,18 @@
 <?php
 namespace App\Action;
 
+use Exception;
+use App\Models\User;
 use App\Models\Personnel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\PersonnelRequest;
+use App\Repository\PersonnelsRepository;
 
 class PersonnelAction{
     
     public function handle(PersonnelRequest $request)
     {
         try {
-            $personnels_data = $request->personnel;
-            // dd($personnels_data,'eto');
             $data = DB::transaction(function() use ($request)
             {        
                 $personnel = Personnel::Create([
@@ -20,20 +21,23 @@ class PersonnelAction{
                     'fonction_personnel' => $request->personnel['fonction_personnel'],
                     'telephone_personnel' => $request->personnel['telephone_personnel']
                 ]);
-                // dd($personnel->id);
-                // dd($personnel->personnel_id,'eto');exit;
+                $id_personnels = $personnel->id_personnel;
+                $users = User::Create([
+                    "name" => $request->user["name"],
+                    "id_personnel" => $id_personnels,
+                    "role" =>  $request->user["role"],
+                    "password" => $request->user["password"]
+                ]);
+                // dd($users);exit;
                 return [
-                    "data"    => $personnel->id,
-                    "message" => "L'insertion de l'acte du $personnel->nom_personnel  a été bien effectué",
+                    "data"    => $personnel->id_personnel,
+                    "message" => "$personnel->nom_personnel  a été bien enregistré",
                 ];
                
             });   
-            // var_dump($personnel);
             return $data;
             
-        } catch (\Exception $th) {
-            //throw $th;
-            // dd('3to');
+        } catch (Exception $th) {
             return $th;
         }
     }

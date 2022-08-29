@@ -17,8 +17,8 @@ return new class extends Migration
             $table->increments('id_transmission');
             $table->integer('numero_transmission');
 
-            $table->integer('expediteur_transmission')->unsigned();
-            $table->foreign('expediteur_transmission')
+            $table->integer('id_usager')->unsigned();
+            $table->foreign('id_usager')
                     ->references('id_usager')
                     ->on('usagers')->onDelete('cascade');
 
