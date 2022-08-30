@@ -4,6 +4,7 @@ namespace App\Repository;
 use Carbon\Carbon;
 use App\Models\Usager;
 use App\Models\Arriver;
+use App\Models\Depart;
 use App\Models\Personnel;
 use App\Models\EtatDossier;
 use Illuminate\Support\Facades\DB;
@@ -14,10 +15,10 @@ class ArchivesRepository implements ArchivesRepositoryInterface
 {
     public function getAllArchive()
     {
-        $archives = EtatDossier::with('Usager','personnel','arriver','depart','transmission')
+        $archives = EtatDossier::with('Usager','personnel','arriver','Depart','transmission')
                                 ->get()
                                 ->map(function($archives) {
-                                    dd($archives);
+                                    // dd($archives);
 
                                     $date_arriver = is_null($archives->arriver)? null : Carbon::parse($archives->arriver->created_at)->format('d/m/Y');
                                     $date_depart = is_null($archives->depart)? null : Carbon::parse($archives->depart->created_at)->format('d/m/Y');

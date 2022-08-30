@@ -6,6 +6,8 @@ use App\Models\Depart;
 use App\Models\Usager;
 use App\Models\Arriver;
 use App\Models\EtatDossier;
+use App\Models\Transmission;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\DepartRequest;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +46,7 @@ class ArchiveAction
                     ]);
                     return [
                         "data"    => $usager->id_usager,
-                        "message" => "L'insertion de l'acte du $usager->nom_usager  a été bien effectué",
+                        "message" => "Le dossier de $usager->nom_usager  a été bien Livrer",
                     ];
                
             });   
@@ -63,29 +65,62 @@ class ArchiveAction
             $data = DB::transaction(function() use ($request)
             {     
                 // dd($request);
+                    $id_personnel_connecteds = Auth::user()->id_personnel;
                     $depart = Depart::Create([
                         'numero_depart' => $request->depart['numero_depart'],
                         'motif_depart' => $request->depart['motif_depart'],
                         'id_usager' => $request->depart['id_usager']
                     ]);
-                    // $id_depart = $depart->id_depart;
-                    // $id_usager = $request->depart['id_usager'];
-                    // // dd($id_depart,$id_usager);exit;
-                    // $id_personnel_connected = Auth::user()->id_personnel;
-                    // // dd((int)$request->depart['id_usager']);
+                    $id_depart = $depart->id_depart;
+                    $id_usager = $request->depart['id_usager'];
 
-                    // $data_depart = Depart::find( (int)$depart['etatDossier_id']);
-
-                    // $data_depart->id_usager = (int)$request->depart['id_usager'];
-                    // $data_depart->id_arriver = $request->$depart['id_arriver'];
-                    // $data_depart->id_depart = $id_depart;
-                    // $data_depart->id_transmission = null;
-                    // $data_depart->id_personnel = null;
-
-                    // dd($data_depart);
+                    $data_depart = EtatDossier::where('id_etat_dosiier',1)
+                                                ->update([
+                                                    'id_usager' => $id_usager,
+                                                    'id_arriver' => $request->depart['id_arriver'],
+                                                    'id_depart' => $id_depart,
+                                                    'id_transmission' =>  $request->depart['id_transmission'],
+                                                    'id_personnel' => $id_personnel_connecteds
+                                                ]);      
                     return [
                         "data"    => $depart->id_depart,
-                        "message" => "L'insertion de l'acte du $depart->nom_depart  a été bien effectué",
+                        "message" => "L'insertion du $depart->nom_depart  a été bien effectué",
+                    ];
+               
+            });   
+            return $data;
+            
+        } catch (\Exception $th) {
+            return $th;
+        }
+    }
+
+
+    public function transmission(Request $request)
+    {
+        try {
+            dd($request);exit;
+            $data = DB::transaction(function() use ($request)
+            {     
+                    $id_personnel_connecteds = Auth::user()->id_personnel;
+                    $transmission = Transmission::Create([
+                        'numero_transmission' => $request->transmission['numero_transmission'],
+                        'id_usager' => $request->depart['id_usager']
+                    ]);
+                    $id_transmission = $transmission->id_transmission;
+                    $id_usager = $request->depart['id_usager'];
+
+                    $data_depart = EtatDossier::where('id_etat_dosiier',1)
+                                                ->update([
+                                                    'id_usager' => $id_usager,
+                                                    'id_arriver' => $request->depart['id_arriver'],
+                                                    'id_depart' => $request->depart['id_depart'],
+                                                    'id_transmission' =>  $id_transmission,
+                                                    'id_personnel' => $id_personnel_connecteds
+                                                ]);      
+                    return [
+                        "data"    => $transmission->id_transmission,
+                        "message" => "L'insertion a été bien transmit",
                     ];
                
             });   

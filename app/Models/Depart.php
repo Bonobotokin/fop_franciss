@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Depart extends Model
 {
     use HasFactory;
+    // protected $guarded = ['id_depart'];
     protected $primaryKey = 'id_depart';
     public $incrementing = true;
     protected $fillable = 

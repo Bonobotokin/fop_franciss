@@ -35,8 +35,8 @@ class ArchivesController extends Controller
     {
         try {
 
-            $reponse_action = $action->depart($request);
-            dd($reponse_action,'eto reponse');
+            $reponse_action = $action->handle($request);
+            // dd($reponse_action,'eto reponse');
             if (!is_null($reponse_action['data'])) {
                 // dd('ok');
                 return redirect()->route('archives.listes',['reponse'=>$reponse_action])->with('success', $reponse_action['message']);
@@ -59,6 +59,30 @@ class ArchivesController extends Controller
         try {
 
             $reponse_action = $action->departement($request);
+            dd($reponse_action,'eto reponse');
+            if (!is_null($reponse_action['data'])) {
+                // dd('ok');
+                return redirect()->route('archives.listes',['reponse'=>$reponse_action])->with('success', $reponse_action['message']);
+                
+            }else {
+                
+                dd('no');
+                // return redirect()::back()->withErrors($errors)->withInput();
+                return redirect()->route('archives.listes',['reponse'=>$reponse_action])->with('errors',$reponse_action['message']);
+            }
+        } catch (Exception $th) {
+            //throw $th;
+                // dd('no');
+            return $th;
+        }
+    }
+
+
+    public function storeTransmission(Request $request, ArchiveAction $action)
+    {
+        try {
+
+            $reponse_action = $action->transmission($request);
             dd($reponse_action,'eto reponse');
             if (!is_null($reponse_action['data'])) {
                 // dd('ok');

@@ -26,6 +26,7 @@ Route::post('/formulaire/personnels', [PersonnelController::class, 'store'])->na
 
 Route::get('/archives',[ArchivesController::class, 'index'])->name('archives.listes');
 Route::post('/nouveaux/dossier/archive/arriver',[ArchivesController::class, 'store'])->name('archive.store');
-Route::post('/nouveaux/dossier/archive/depart',[ArchivesController::class, 'storeDepart'])->name('archive.store.departement');
+Route::post('/nouveaux/dossier/archive/depart',[ArchivesController::class, 'storeDepart'])->name('archive.store.depart');
+Route::post('/nouveaux/dossier/archive/transmission',[ArchivesController::class, 'storeTransmission'])->name('archive.store.transmission');
 
 

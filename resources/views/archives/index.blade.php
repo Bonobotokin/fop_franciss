@@ -43,36 +43,69 @@
                                     @foreach ($allArchives as $liste)
                                         <tr style="text-align:center">
                                             <td>{{ $liste['numero'] }}</td>
-                                            <td>{{ $liste['usagers'] }}</td>
-                                            <td>{{ $liste['date_arriver'] }}</td>
-                                            <td>{{ $liste['date_depart'] }}</td>
-                                            <td>{{ $liste['date_transmission'] }}</td>
-                                            @if (is_null($liste['id_depart']) || is_null($liste['id_transmission']))
-                                                <td>
+                                            <td>{{ $liste['usagers'] }}</td>{{ $liste['date_arriver'] }}
+                                            <td>
+                                                @if (!is_null($liste['id_arriver']))
+                                                    <a class="btn btn-block btn-outline-success btn-sm" href="#"
+                                                        data-toggle="modal" data-target="#modale_{{$liste['id_usager']}}">
+                                                        <i class="fa fa-marker"></i>
+                                                        {{ $liste['date_arriver'] }}
+                                                    </a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (is_null($liste['id_depart']))
+                                                    <a class="btn btn-block btn-outline-danger btn-sm" href="#modale_{{$liste['id_usager']}}"
+                                                        data-toggle="modal" data-target="#modale_{{$liste['id_usager']}}">
+                                                        <i class="fa fa-plus"></i>
+                                                        Enregistrer le depart
+                                                    </a>
+                                                @else
+                                                    <a class="btn btn-block btn-outline-success btn-sm" href="#modale_{{$liste['id_usager']}}"
+                                                        data-toggle="modal" data-target="#modale_{{$liste['id_usager']}}">
+                                                        <i class="fa fa-marker"></i>
+                                                        {{ $liste['date_depart'] }}
+                                                    </a>
+                                                @endif
+
+                                            </td>
+                                            <td>
+                                                @if (is_null($liste['id_transmission']))
+                                                    <a class="btn btn-block btn-outline-danger btn-sm" href="#transmission_{{$liste['id_usager']}}"
+                                                        data-toggle="modal" data-target="#transmission_{{$liste['id_usager']}}">
+                                                        <i class="fa fa-plus"></i>
+                                                        Tramission
+                                                    </a>
+                                                @else
+                                                    <a class="btn btn-block btn-outline-success btn-sm" href="#"
+                                                        data-toggle="modal" data-target="#{{$liste['id_usager']}}">
+                                                        <i class="fa fa-marker"></i>
+                                                        {{ $liste['date_transmission'] }}
+                                                    </a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (is_null($liste['id_depart']))
                                                     <button type="button" class="btn btn-warning btn-block">
                                                         <i class="fa fa-bell"></i>
                                                         En attente
                                                     </button>
-                                                </td>
-                                            @endif
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-info">Action</button>
-                                                    <button type="button"
-                                                        class="btn btn-info dropdown-toggle dropdown-icon"
-                                                        data-toggle="dropdown">
-                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                @else
+                                                    <button type="button" class="btn btn-success btn-block">
+                                                        <i class="fa fa-bell"></i>
+                                                        Livrer
                                                     </button>
-                                                    <div class="dropdown-menu" role="menu">
-                                                        <a class="dropdown-item" href="#">Details</a>
-                                                        <a class="dropdown-item" href="#" data-toggle="modal"
-                                                            data-target="#modal-depart">Depart</a>
-                                                        <a class="dropdown-item" href="#">Transmission</a>
-                                                    </div>
-                                                </div>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="button" class="btn btn-block btn-info btn-sm">
+                                                    <i class="fa fa-info"></i>
+                                                    Plus Info
+                                                </a>
+
                                             </td>
                                         </tr>
-                                        <div class="modal fade" id="modal-depart">
+                                        <div class="modal fade" id="modale_{{$liste['id_usager']}}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -85,7 +118,7 @@
                                                     </div>
                                                     <div class="modal-body">
 
-                                                        <form action="{{ route('archive.store.departement') }}"
+                                                        <form action="{{ route('archive.store.depart') }}"
                                                             method="POST">
                                                             @csrf
                                                             <div class="row">
@@ -114,11 +147,76 @@
                                                                             class="form-control"
                                                                             value="{{ $liste['id_usager'] }}">
 
-                                                                            <input type="hidden" name="depart[etatDossier_id]"
+                                                                        <input type="hidden" name="depart[id_etat_dosiier]"
                                                                             value="{{ $liste['id_etat_dossier'] }}">
 
                                                                         <input type="hidden" name="depart[id_arriver]"
                                                                             value="{{ $liste['id_arriver'] }}">
+                                                                        <input type="hidden"
+                                                                            name="depart[id_transmission]"
+                                                                            value="{{ $liste['id_transmission'] }}">
+                                                                    </div>
+                                                                </div>
+
+                                                                <button type="reset" class="btn btn-danger"
+                                                                    data-dismiss="modal">Fermer</button>
+                                                                <input type="submit" class="btn btn-primary"
+                                                                    value="Enregistrer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+                                        <div class="modal fade" id="transmission_{{$liste['id_usager']}}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Depart du dossier de
+                                                            {{ $liste['usagers'] }}
+                                                        </h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <form action="{{ route('archive.store.transmission') }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="row">
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <p>informatin sur le Dossier</p>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <label for="">Numero</label>
+                                                                        <input type="number"
+                                                                            name="transmission[numero_transmission]"
+                                                                            class="form-control" placeholder="Numero">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-3">
+                                                                    <div class="col-6">
+                                                                        <input type="hidden" name="transmission[id_usager]"
+                                                                            class="form-control"
+                                                                            value="{{ $liste['id_usager'] }}">
+
+                                                                        <input type="hidden"
+                                                                            name="transmission[id_etat_dosiier]"
+                                                                            value="{{ $liste['id_etat_dossier'] }}">
+
+                                                                        <input type="hidden" name="transmission[id_arriver]"
+                                                                            value="{{ $liste['id_arriver'] }}">
+
+                                                                        <input type="hidden"
+                                                                            name="transmission[id_depart]"
+                                                                            value="{{ $liste['id_transmission'] }}">
+                                                                        <input type="hidden"
+                                                                            name="transmission[id_transmission]"
+                                                                            value="{{ $liste['id_transmission'] }}">
                                                                     </div>
                                                                 </div>
 
